@@ -6,6 +6,7 @@
 
 MediCare is a full-stack e-commerce web application for purchasing over-the-counter (OTC) medicines. Customers can browse medicines, add to cart, and place orders. Sellers manage their medicine inventory and fulfill orders. Admins oversee the platform and manage all users and listings.
 
+🔗 **Live Site:** 
 
 ## Roles & Permissions
 
