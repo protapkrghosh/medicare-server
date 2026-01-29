@@ -1,8 +1,87 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../../generated/prisma"
+   provider = "prisma-client"
+   output   = "../../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+   provider = "postgresql"
+}
+
+model Category {
+   id        String     @id @default(uuid())
+   name      String     @unique
+   image     String?
+   medicines Medicine[]
+}
+
+model Medicine {
+   id           String  @id @default(uuid())
+   name         String
+   description  String
+   price        Float
+   stock        Int
+   image        String
+   manufacturer String
+   isActive     Boolean @default(true)
+   authorId     String // better-auth
+
+   categoryId String
+   category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+   reviews    Review[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+   // @@index([])
+   @@map("Medicines")
+}
+
+model Order {
+   id              String        @id @default(uuid())
+   authorId        String // better-auth
+   totalAmount     Float
+   totalOrder      Int
+   shippingAddress String
+   status          OrderStatus   @default(PLACED)
+   paymentMethod   PaymentStatus @default(CASH_ON_DELIVERY)
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Review {
+   id         String   @id @default(uuid())
+   rating     Int?
+   comment    String?  @db.Text
+   authorId   String // better-auth
+   medicineId String
+   medicine   Medicine @relation(fields: [medicineId], references: [id])
+
+   parentId String?
+   parent   Review? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+
+   replies Review[]      @relation("CommentReplies")
+   status  CommentStatus @default(APPROVED)
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+   PLACED
+   PROCESSING
+   SHIPPED
+   DELIVERED
+   CANCELLED
+}
+
+enum PaymentStatus {
+   CASH_ON_DELIVERY
+   MOBILE_BANKING
+   BANKING
+}
+
+enum CommentStatus {
+   APPROVED
+   REJECT
 }
