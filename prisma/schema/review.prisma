@@ -1,0 +1,22 @@
+model Review {
+   id         String   @id @default(uuid())
+   rating     Int?
+   comment    String?  @db.Text
+   authorId   String // better-auth
+   medicineId String
+   medicine   Medicine @relation(fields: [medicineId], references: [id])
+
+   parentId String?
+   parent   Review? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+
+   replies Review[]      @relation("CommentReplies")
+   status  CommentStatus @default(APPROVED)
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+enum CommentStatus {
+   APPROVED
+   REJECT
+}
