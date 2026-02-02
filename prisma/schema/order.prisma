@@ -1,6 +1,6 @@
 model Order {
    id              String        @id @default(uuid())
-   authorId        String // better-auth
+   authorId        String 
    totalAmount     Float
    totalOrder      Int
    shippingAddress String
