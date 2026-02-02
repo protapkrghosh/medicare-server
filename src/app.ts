@@ -3,6 +3,7 @@ import express from "express";
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
 import { medicineRouter } from "./modules/medicine/medicine.route";
+import { authRouter } from "./authentication/auth.route";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(
    }),
 );
 app.use(express.json());
+app.use("/api/auth", authRouter);
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use("/api", medicineRouter);
