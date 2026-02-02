@@ -9,8 +9,8 @@ model Medicine {
    isActive     Boolean @default(true)
    authorId     String? // better-auth
 
-   categoryId String?
-   category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+   // categoryId String?
+   // category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
    reviews    Review[]
 
    createdAt DateTime @default(now())
