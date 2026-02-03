@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
+import { UserRole } from "../middleware/auth";
 
 export const auth = betterAuth({
    database: prismaAdapter(prisma, {
@@ -13,7 +14,7 @@ export const auth = betterAuth({
       additionalFields: {
          role: {
             type: "string",
-            defaultValue: "CUSTOMER",
+            defaultValue: UserRole.CUSTOMER,
             required: true,
          },
          status: {

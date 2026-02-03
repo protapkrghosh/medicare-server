@@ -8,6 +8,7 @@ const register = async (req: Request, res: Response) => {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
+            role: req.user?.role,
          },
       });
 
