@@ -35,8 +35,33 @@ const login = async (req: Request, res: Response) => {
 
 const logout = async (req: Request, res: Response) => {};
 
+const profile = async (req: Request, res: Response) => {
+   try {
+      const cookie = req.headers.cookie;
+
+      if (!cookie) {
+         return res.status(401).json({ message: "No cookie found" });
+      }
+
+      const session = await auth.api.getSession({
+         headers: {
+            cookie,
+         },
+      });
+
+      if (!session) {
+         return res.status(401).json({ message: "Invalid session" });
+      }
+
+      res.json(session.user);
+   } catch (error) {
+      res.status(401).json({ message: "Unauthorized", error });
+   }
+};
+
 export const authController = {
    register,
    login,
    logout,
+   profile,
 };
