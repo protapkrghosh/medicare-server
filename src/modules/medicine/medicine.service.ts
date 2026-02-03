@@ -27,8 +27,31 @@ const createMedicine = async (
    return result;
 };
 
+const updateMedicine = async (medicineId: string, data: Medicine) => {
+   const medicine = await prisma.medicine.update({
+      where: {
+         id: medicineId,
+      },
+      data,
+   });
+
+   return medicine;
+};
+
+const deleteMedicine = async (medicineId: string) => {
+   const medicine = await prisma.medicine.delete({
+      where: {
+         id: medicineId
+      }
+   })
+
+   return medicine;
+}
+
 export const medicineService = {
    getAllMedicines,
    getMedicine,
    createMedicine,
+   updateMedicine,
+   deleteMedicine,
 };
