@@ -7,6 +7,7 @@ import { authRouter } from "./authentication/auth.route";
 import { notFound } from "./middleware/notFound";
 import errorHandler from "./middleware/globalErrorHandler";
 import { userRouter } from "./modules/user/user.route";
+import { orderRouter } from "./modules/order/order.route";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/auth", authRouter);
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use("/api", medicineRouter);
+app.use("/api", orderRouter);
 app.use("/api/admin", userRouter);
 
 app.get("/", (req, res) => {

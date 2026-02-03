@@ -1,12 +1,13 @@
 model Order {
    id              String        @id @default(uuid())
    authorId        String
+   medicineId String
+   medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+   
    shippingAddress String
    status          OrderStatus   @default(PLACED)
    paymentMethod   PaymentStatus @default(CASH_ON_DELIVERY)
 
-   medicineId String
-   medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

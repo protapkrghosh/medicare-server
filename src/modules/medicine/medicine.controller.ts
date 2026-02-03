@@ -12,7 +12,7 @@ const getAllMedicines = async (
 
       res.status(200).json({
          success: true,
-         message: "All medicine has been successfully obtained.",
+         message: "All medicines has been successfully obtained.",
          data: result,
       });
    } catch (error) {
