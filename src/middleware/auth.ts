@@ -1,11 +1,6 @@
 import { auth as betterAuth } from "../lib/auth";
 import type { NextFunction, Request, Response } from "express";
-
-export enum UserRole {
-   CUSTOMER = "CUSTOMER",
-   SELLER = "SELLER",
-   ADMIN = "ADMIN",
-}
+import type { UserRole } from "../types/roles";
 
 declare global {
    namespace Express {
