@@ -9,13 +9,14 @@ model Medicine {
    isActive     Boolean @default(true)
    authorId     String?
 
-   // categoryId String?
-   // category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+   categoryId String?   
+   category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
    reviews    Review[]
+   orders     Order[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 
-   // @@index([])
+   @@index([name, price, manufacturer])
    @@map("Medicines")
 }
