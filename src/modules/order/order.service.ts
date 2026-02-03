@@ -1,3 +1,4 @@
+import type { User } from "better-auth/types";
 import type { Order } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
@@ -9,12 +10,21 @@ const createOrder = async (data: Order) => {
    return order;
 };
 
-// TODO: Role base own order validation
-const getAllOrders = async () => {
-   const orders = await prisma.order.findMany();
+const getAllOrders = async (userId: string) => {
+   const orders = await prisma.order.findMany({
+      where: {
+         authorId: userId,
+      },
+   });
+
+   if (!orders || orders.length === 0) {
+      throw new Error("No orders found for this user.");
+   }
+
    return orders;
 };
 
+// TODO: Role base own order validation
 const getOrder = async (orderId: string) => {
    const order = await prisma.order.findUnique({
       where: {
