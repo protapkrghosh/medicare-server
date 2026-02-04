@@ -42,8 +42,17 @@ const getAllOrders = async (
 
 const getOrder = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const { id } = req.params;
-      const order = await orderService.getOrder(id as string);
+      const user = req.user;
+      if (!user) {
+         if (!user) {
+            return res.status(401).json({
+               success: false,
+               message: "User not authenticated",
+            });
+         }
+      }
+
+      const order = await orderService.getOrder(user.id as string);
       res.status(200).json({
          success: true,
          message: "The order has been successfully obtained.",
