@@ -2,13 +2,13 @@ import type { Order } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createOrder = async (data: Order, authorId: string) => {
-   const fineSeller = await prisma.medicine.findUnique({
+   const findSeller = await prisma.medicine.findUnique({
       where: {
          id: data.medicineId,
       },
    });
 
-   if (!fineSeller) {
+   if (!findSeller) {
       throw new Error("Seller not found.");
    }
 
@@ -16,7 +16,7 @@ const createOrder = async (data: Order, authorId: string) => {
       data: {
          ...data,
          authorId,
-         sellerId: fineSeller.authorId as string,
+         sellerId: findSeller.authorId as string,
       },
    });
 
@@ -37,13 +37,17 @@ const getAllOrders = async (userId: string) => {
    return orders;
 };
 
-const getOrder = async (orderId: string) => {
+const getOrder = async (orderId: string, userId: string) => {
    const order = await prisma.order.findUnique({
       where: {
          id: orderId,
       },
    });
-   
+
+   if (order?.authorId !== userId) {
+      throw new Error("You're not authorized to get this order.");
+   }
+
    return order;
 };
 
