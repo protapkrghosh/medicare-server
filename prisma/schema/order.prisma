@@ -1,7 +1,7 @@
 model Order {
    id         String   @id @default(uuid())
    authorId   String
-   sellerId   String?
+   sellerId   String
    medicineId String
    medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
 

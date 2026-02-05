@@ -1,6 +1,6 @@
 model Medicine {
    id           String   @id @default(uuid())
-   authorId     String?
+   authorId     String
    name         String   @db.VarChar(255)
    description  String   @db.Text
    price        Float    @default(0)
