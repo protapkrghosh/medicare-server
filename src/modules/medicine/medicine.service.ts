@@ -1,4 +1,4 @@
-import type { Medicine } from "../../../generated/prisma/client";
+import type { Medicine, Order } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 // Medicines
@@ -17,12 +17,18 @@ const getMedicine = async (medicineId: string) => {
 };
 
 // Seller Management
-const getSellerOrders = async () => {
-   
-}
+const getSellerOrders = async (sellerId: string) => {
+   const orders = await prisma.order.findMany({
+      where: {
+         sellerId: sellerId,
+      },
+   });
+   return orders;
+};
 
 const createMedicine = async (
-   data: Omit<Medicine, "id" | "createdAt" | "updatedAt">, authorId: string,
+   data: Omit<Medicine, "id" | "createdAt" | "updatedAt">,
+   authorId: string,
 ) => {
    const result = await prisma.medicine.create({
       data: {
@@ -45,20 +51,37 @@ const updateMedicine = async (medicineId: string, data: Medicine) => {
    return medicine;
 };
 
+const updateOrder = async (orderId: string, userId: string, data: Order) => {
+   const orders = await prisma.order.update({
+      where: {
+         id: orderId,
+      },
+      data,
+   });
+
+   if (orders.sellerId !== userId) {
+      throw new Error("You're not authorized to update this order.");
+   }
+
+   return orders;
+};
+
 const deleteMedicine = async (medicineId: string) => {
    const medicine = await prisma.medicine.delete({
       where: {
-         id: medicineId
-      }
-   })
+         id: medicineId,
+      },
+   });
 
    return medicine;
-}
+};
 
 export const medicineService = {
    getAllMedicines,
    getMedicine,
+   getSellerOrders,
    createMedicine,
    updateMedicine,
+   updateOrder,
    deleteMedicine,
 };

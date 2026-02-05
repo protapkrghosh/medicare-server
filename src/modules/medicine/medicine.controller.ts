@@ -36,6 +36,33 @@ const getMedicine = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Seller Management
+const getSellerOrders = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+) => {
+   try {
+      const user = req.user;
+
+      if (!user) {
+         return res.status(401).json({
+            success: false,
+            message: "User not authenticated",
+         });
+      }
+
+      const result = await medicineService.getSellerOrders(user.id);
+
+      res.status(200).json({
+         success: true,
+         message: "All orders has been successfully obtained.",
+         data: result,
+      });
+   } catch (error) {
+      next(error);
+   }
+};
+
 const createMedicine = async (
    req: Request,
    res: Response,
@@ -74,6 +101,7 @@ const updateMedicine = async (
          id as string,
          req.body,
       );
+
       res.status(200).json({
          success: true,
          message: "Medicine updated successfully.",
@@ -82,6 +110,26 @@ const updateMedicine = async (
    } catch (error) {
       next(error);
    }
+};
+
+const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+   const { id } = req.params;
+   const user = req.user;
+
+   if (!user) {
+      return res.status(401).json({
+         success: false,
+         message: "User not authenticated",
+      });
+   }
+
+   const result = await medicineService.updateOrder(id as string, user.id, req.body);
+
+   res.status(200).json({
+      success: true,
+      message: "Order updated successfully.",
+      data: result,
+   });
 };
 
 const deleteMedicine = async (
@@ -105,7 +153,9 @@ const deleteMedicine = async (
 export const medicineController = {
    getAllMedicines,
    getMedicine,
+   getSellerOrders,
    createMedicine,
    updateMedicine,
+   updateOrder,
    deleteMedicine,
 };

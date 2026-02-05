@@ -10,7 +10,11 @@ router.get("/medicines", medicineController.getAllMedicines);
 router.get("/medicines/:id", medicineController.getMedicine);
 
 // Seller Management
-
+router.get(
+   "/seller/orders",
+   auth(UserRole.SELLER),
+   medicineController.getSellerOrders,
+);
 
 router.post(
    "/seller/medicines",
@@ -22,6 +26,12 @@ router.put(
    "/seller/medicines/:id",
    auth(UserRole.SELLER),
    medicineController.updateMedicine,
+);
+
+router.patch(
+   "/seller/orders/:id",
+   auth(UserRole.SELLER),
+   medicineController.updateOrder,
 );
 
 router.delete(
