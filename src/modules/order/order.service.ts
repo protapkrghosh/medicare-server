@@ -2,10 +2,21 @@ import type { Order } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createOrder = async (data: Order, authorId: string) => {
+   const fineSeller = await prisma.medicine.findUnique({
+      where: {
+         id: data.medicineId,
+      },
+   });
+
+   if (!fineSeller) {
+      throw new Error("Seller not found.");
+   }
+
    const order = await prisma.order.create({
       data: {
          ...data,
          authorId,
+         sellerId: fineSeller.authorId as string,
       },
    });
 
@@ -26,16 +37,13 @@ const getAllOrders = async (userId: string) => {
    return orders;
 };
 
-const getOrder = async (userId: string) => {
-   const order = await prisma.order.findFirst({
+const getOrder = async (orderId: string) => {
+   const order = await prisma.order.findUnique({
       where: {
-         authorId: userId,
+         id: orderId,
       },
    });
-
-   if (!order) {
-      throw new Error("No orders found for this user.");
-   }
+   
    return order;
 };
 
