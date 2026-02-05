@@ -3,7 +3,15 @@ import { orderService } from "./order.service";
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const order = await orderService.createOrder(req.body);
+      const user = req.user;
+      if (!user) {
+         return res.status(401).json({
+            success: false,
+            message: "User not authenticated",
+         });
+      }
+
+      const order = await orderService.createOrder(req.body, user.id);
       res.status(201).json({
          success: true,
          message: "Order created successfully",
@@ -44,12 +52,10 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const user = req.user;
       if (!user) {
-         if (!user) {
-            return res.status(401).json({
-               success: false,
-               message: "User not authenticated",
-            });
-         }
+         return res.status(401).json({
+            success: false,
+            message: "User not authenticated",
+         });
       }
 
       const order = await orderService.getOrder(user.id as string);

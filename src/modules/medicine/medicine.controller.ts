@@ -42,7 +42,16 @@ const createMedicine = async (
    next: NextFunction,
 ) => {
    try {
-      const result = await medicineService.createMedicine(req.body);
+      const user = req.user;
+
+      if (!user) {
+         return res.status(401).json({
+            success: false,
+            message: "User not authenticated",
+         });
+      }
+
+      const result = await medicineService.createMedicine(req.body, user.id);
       res.status(201).json({
          success: true,
          message: "Medicine created successfully",
