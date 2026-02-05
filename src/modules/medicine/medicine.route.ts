@@ -7,9 +7,11 @@ const router = Router();
 
 // Medicines
 router.get("/medicines", medicineController.getAllMedicines);
-router.get("/medicine/:id", medicineController.getMedicine);
+router.get("/medicines/:id", medicineController.getMedicine);
 
 // Seller Management
+
+
 router.post(
    "/seller/medicines",
    auth(UserRole.SELLER),
