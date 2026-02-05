@@ -72,7 +72,8 @@ CREATE TABLE "Category" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT DEFAULT 'Represents a pharmaceutical product with dosage, pricing, and availability information.',
-    "image" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
@@ -80,6 +81,7 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "Medicines" (
     "id" TEXT NOT NULL,
+    "authorId" TEXT,
     "name" VARCHAR(255) NOT NULL,
     "description" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -87,7 +89,7 @@ CREATE TABLE "Medicines" (
     "image" TEXT NOT NULL,
     "manufacturer" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "category" TEXT NOT NULL,
+    "categoryId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -98,6 +100,7 @@ CREATE TABLE "Medicines" (
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
     "authorId" TEXT NOT NULL,
+    "sellerId" TEXT,
     "medicineId" TEXT NOT NULL,
     "shippingAddress" TEXT NOT NULL,
     "status" "OrderStatus" NOT NULL DEFAULT 'PLACED',
@@ -149,6 +152,9 @@ ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Medicines" ADD CONSTRAINT "Medicines_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "Medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;

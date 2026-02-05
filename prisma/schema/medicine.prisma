@@ -1,16 +1,15 @@
 model Medicine {
-   id           String  @id @default(uuid())
+   id           String   @id @default(uuid())
    authorId     String?
-   name         String  @db.VarChar(255)
-   description  String  @db.Text
-   price        Float   @default(0)
-   stock        Int     @default(0)
+   name         String   @db.VarChar(255)
+   description  String   @db.Text
+   price        Float    @default(0)
+   stock        Int      @default(0)
    image        String
    manufacturer String
-   isActive     Boolean @default(true)
-   category     String
-   // categoryId String   
-   // category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+   isActive     Boolean  @default(true)
+   categoryId   String
+   category     Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
    reviews Review[]
    orders  Order[]

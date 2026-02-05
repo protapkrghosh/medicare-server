@@ -1,7 +1,11 @@
-import type { Medicine, Order } from "../../../generated/prisma/client";
+import type {
+   Category,
+   Medicine,
+   Order,
+} from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
-// Medicines
+// Medicines (public)
 const getAllMedicines = async () => {
    const medicines = await prisma.medicine.findMany();
    return medicines;
@@ -76,6 +80,15 @@ const deleteMedicine = async (medicineId: string) => {
    return medicine;
 };
 
+// Admin
+const createCategory = async (data: Category) => {
+   const category = await prisma.category.create({
+      data,
+   });
+
+   return category;
+};
+
 export const medicineService = {
    getAllMedicines,
    getMedicine,
@@ -84,4 +97,5 @@ export const medicineService = {
    updateMedicine,
    updateOrder,
    deleteMedicine,
+   createCategory,
 };

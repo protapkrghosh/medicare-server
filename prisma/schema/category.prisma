@@ -1,8 +1,9 @@
 model Category {
-   id          String  @id @default(uuid())
-   name        String  @unique
-   description String? @default("Represents a pharmaceutical product with dosage, pricing, and availability information.") @db.Text
-   image       String?
+   id          String   @id @default(uuid())
+   name        String   @unique
+   description String?  @default("Represents a pharmaceutical product with dosage, pricing, and availability information.") @db.Text
 
-   // medicines Medicine[]
+   createdAt   DateTime @default(now())
+   updatedAt   DateTime @updatedAt
+   medicines Medicine[]
 }

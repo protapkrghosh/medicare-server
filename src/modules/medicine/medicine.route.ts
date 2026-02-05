@@ -17,6 +17,12 @@ router.get(
 );
 
 router.post(
+   "/categories",
+   auth(UserRole.ADMIN),
+   medicineController.createCategory,
+);
+
+router.post(
    "/seller/medicines",
    auth(UserRole.SELLER),
    medicineController.createMedicine,
