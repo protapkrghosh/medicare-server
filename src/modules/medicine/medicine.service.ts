@@ -7,7 +7,13 @@ import { prisma } from "../../lib/prisma";
 
 // Medicines (public)
 const getAllMedicines = async () => {
-   const medicines = await prisma.medicine.findMany();
+   const medicines = await prisma.medicine.findMany({
+      where: {
+         stock: {
+            notIn: [0]
+         }
+      }
+   });
    return medicines;
 };
 

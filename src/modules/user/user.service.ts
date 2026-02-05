@@ -2,7 +2,13 @@ import type { User } from "better-auth/types";
 import { prisma } from "../../lib/prisma";
 
 const getAllUsers = async () => {
-   const users = await prisma.user.findMany();
+   const users = await prisma.user.findMany({
+      where: {
+         role: {
+            notIn: ['ADMIN']
+         },
+      },
+   });
    return users;
 };
 
