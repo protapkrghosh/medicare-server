@@ -8,18 +8,13 @@ const router = Router();
 // Medicines
 router.get("/medicines", medicineController.getAllMedicines);
 router.get("/medicines/:id", medicineController.getMedicine);
+router.get("/categories", medicineController.getCategories);
 
 // Seller Management
 router.get(
    "/seller/orders",
    auth(UserRole.SELLER),
    medicineController.getSellerOrders,
-);
-
-router.post(
-   "/categories",
-   auth(UserRole.ADMIN),
-   medicineController.createCategory,
 );
 
 router.post(
@@ -44,6 +39,13 @@ router.delete(
    "/seller/medicines/:id",
    auth(UserRole.SELLER),
    medicineController.deleteMedicine,
+);
+
+// Admin
+router.post(
+   "/categories",
+   auth(UserRole.ADMIN),
+   medicineController.createCategory,
 );
 
 export const medicineRouter = router;

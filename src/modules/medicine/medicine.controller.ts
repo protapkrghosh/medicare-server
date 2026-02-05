@@ -35,6 +35,24 @@ const getMedicine = async (req: Request, res: Response, next: NextFunction) => {
    }
 };
 
+const getCategories = async (
+   req: Request,
+   res: Response,
+   next: NextFunction,
+) => {
+   try {
+      const categories = await medicineService.getCategories();
+
+      res.status(200).json({
+         success: true,
+         message: "All categories has been successfully obtained.",
+         data: categories,
+      });
+   } catch (error) {
+      next(error);
+   }
+};
+
 // Seller Management
 const getSellerOrders = async (
    req: Request,
@@ -175,6 +193,7 @@ const createCategory = async (
 export const medicineController = {
    getAllMedicines,
    getMedicine,
+   getCategories,
    getSellerOrders,
    createMedicine,
    updateMedicine,

@@ -20,6 +20,11 @@ const getMedicine = async (medicineId: string) => {
    return medicine;
 };
 
+const getCategories = async () => {
+   const categories = await prisma.category.findMany();
+   return categories;
+};
+
 // Seller Management
 const getSellerOrders = async (sellerId: string) => {
    const orders = await prisma.order.findMany({
@@ -92,6 +97,7 @@ const createCategory = async (data: Category) => {
 export const medicineService = {
    getAllMedicines,
    getMedicine,
+   getCategories,
    getSellerOrders,
    createMedicine,
    updateMedicine,
