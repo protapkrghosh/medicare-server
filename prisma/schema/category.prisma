@@ -1,8 +1,8 @@
 model Category {
    id          String  @id @default(uuid())
    name        String  @unique
-   description String?  @default("Represents a pharmaceutical product with dosage, pricing, and availability information.") @db.Text
+   description String? @default("Represents a pharmaceutical product with dosage, pricing, and availability information.") @db.Text
    image       String?
 
-   medicines Medicine[]
+   // medicines Medicine[]
 }
