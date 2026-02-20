@@ -5,6 +5,7 @@ model Order {
    medicineId String
    medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
 
+   totalPrice      Float @default(0)
    shippingAddress String
    status          OrderStatus   @default(PLACED)
    paymentMethod   PaymentStatus @default(CASH_ON_DELIVERY)

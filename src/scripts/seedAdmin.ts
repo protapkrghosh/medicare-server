@@ -39,6 +39,8 @@ async function seedAdmin() {
       });
    } catch (error) {
       console.error(error);
+   } finally {
+      await prisma.$disconnect();
    }
 }
 
