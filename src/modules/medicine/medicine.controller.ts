@@ -8,6 +8,9 @@ const getAllMedicines = async (
    next: NextFunction,
 ) => {
    try {
+      const { search } = req.query;
+      console.log("Search Value", search);
+
       const result = await medicineService.getAllMedicines();
 
       res.status(200).json({
