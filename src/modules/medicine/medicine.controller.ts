@@ -19,14 +19,6 @@ const getAllMedicines = async (
          limit = 10,
       } = req.query;
 
-      console.log("Filter Values:", {
-         search,
-         categoryName,
-         minPrice,
-         maxPrice,
-         manufacturer,
-      });
-
       // Build filters object with only defined properties
       const filters: FilterOptions = {
          page: parseInt(page as string) || 1,
