@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { medicineService } from "./medicine.service";
+import type { FilterOptions } from "../../types/filterOptions";
 
 // Medicines (public)
 const getAllMedicines = async (
@@ -8,15 +9,49 @@ const getAllMedicines = async (
    next: NextFunction,
 ) => {
    try {
-      const { search } = req.query;
-      console.log("Search Value", search);
+      const {
+         search,
+         categoryName,
+         minPrice,
+         maxPrice,
+         manufacturer,
+         page = 1,
+         limit = 10,
+      } = req.query;
 
-      const result = await medicineService.getAllMedicines();
+      console.log("Filter Values:", {
+         search,
+         categoryName,
+         minPrice,
+         maxPrice,
+         manufacturer,
+      });
+
+      // Build filters object with only defined properties
+      const filters: FilterOptions = {
+         page: parseInt(page as string) || 1,
+         limit: parseInt(limit as string) || 10,
+      };
+
+      // Add optional properties only if they exist
+      if (search) filters.search = search as string;
+      if (categoryName) filters.categoryName = categoryName as string;
+      if (minPrice) filters.minPrice = parseFloat(minPrice as string);
+      if (maxPrice) filters.maxPrice = parseFloat(maxPrice as string);
+      if (manufacturer) filters.manufacturer = manufacturer as string;
+
+      const result = await medicineService.getAllMedicines(filters);
 
       res.status(200).json({
          success: true,
-         message: "All medicines has been successfully obtained.",
-         data: result,
+         message: "Medicines have been successfully retrieved.",
+         data: result.medicines,
+         pagination: {
+            total: result.total,
+            page: filters.page,
+            limit: filters.limit,
+            totalPages: Math.ceil(result.total / filters.limit),
+         },
       });
    } catch (error) {
       next(error);

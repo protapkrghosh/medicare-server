@@ -4,17 +4,105 @@ import type {
    Order,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+import type { FilterOptions } from "../../types/filterOptions";
 
 // Medicines (public)
-const getAllMedicines = async () => {
-   const medicines = await prisma.medicine.findMany({
-      where: {
-         stock: {
-            notIn: [0]
-         }
+const getAllMedicines = async (filters: FilterOptions) => {
+   const {
+      search,
+      categoryName,
+      minPrice,
+      maxPrice,
+      manufacturer,
+      page,
+      limit,
+   } = filters;
+
+   // Build where clause dynamically
+   const where: any = {
+      stock: {
+         notIn: [0],
+      },
+      isActive: true,
+   };
+
+   // Search filter (search in name and description)
+   if (search && search.trim()) {
+      where.OR = [
+         {
+            name: {
+               contains: search,
+               mode: "insensitive",
+            },
+         },
+         {
+            description: {
+               contains: search,
+               mode: "insensitive",
+            },
+         },
+      ];
+   }
+
+   // Category filter by Name
+   if (categoryName && categoryName.trim()) {
+      where.category = {
+         name: {
+            contains: categoryName,
+            mode: "insensitive",
+         },
+      };
+   }
+
+   // Price range filter
+   if (minPrice !== undefined || maxPrice !== undefined) {
+      where.price = {};
+      if (minPrice !== undefined) {
+         where.price.gte = minPrice;
       }
-   });
-   return medicines;
+      if (maxPrice !== undefined) {
+         where.price.lte = maxPrice;
+      }
+   }
+
+   // Manufacturer filter
+   if (manufacturer && manufacturer.trim()) {
+      where.manufacturer = {
+         contains: manufacturer,
+         mode: "insensitive",
+      };
+   }
+
+   try {
+      // Get total count for pagination
+      const total = await prisma.medicine.count({ where });
+
+      // Fetch medicines with pagination
+      const medicines = await prisma.medicine.findMany({
+         where,
+         include: {
+            category: {
+               select: {
+                  id: true,
+                  name: true,
+               },
+            },
+         },
+         orderBy: {
+            createdAt: "desc",
+         },
+         skip: (page - 1) * limit,
+         take: limit,
+      });
+
+      return {
+         medicines,
+         total,
+      };
+   } catch (error) {
+      // console.error("Error fetching medicines:", error);
+      throw new Error("Failed to fetch medicines");
+   }
 };
 
 const getMedicine = async (medicineId: string) => {
